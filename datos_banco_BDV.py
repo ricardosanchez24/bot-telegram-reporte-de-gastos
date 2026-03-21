@@ -42,7 +42,7 @@ def procesar_estado_cuenta():
                             datos_extraidos.append({
                                 "Fecha": fecha,
                                 "descripcion": desc,
-                                "Débito": debito
+                                "monto": debito
                             })
 
     # 4. Guardar los datos en el CSV
@@ -51,7 +51,7 @@ def procesar_estado_cuenta():
         ruta_csv = os.path.join(carpeta_descargas, 'datos_banco_procesados.csv')
         
         
-        df.to_csv(ruta_csv, index=False, encoding='utf-8-sig', sep=';') 
+        df.to_csv(ruta_csv, index=False, encoding='utf-8-sig', sep=',') 
         print(f"¡Éxito! Se extrajeron {len(df)} registros. Archivo guardado en: {ruta_csv}")
         return ruta_csv
     else:

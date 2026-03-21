@@ -3,15 +3,10 @@ import os
 import matplotlib.pyplot as plt 
 import numpy as np
 
-from procesador_datos import procesador
-from datos_banco_BDV import procesar_estado_cuenta
 
-def graficador():
+def graficador(datos):
 
     fig, ax = plt.subplots(figsize=(8, 4), subplot_kw=dict(aspect="equal"))
-
-    csv = procesar_estado_cuenta()
-    datos = procesador(csv)
 
     montos = [abs(float(x.split()[0])) for x in datos]
     categorias = [x.split()[-1] for x in datos]

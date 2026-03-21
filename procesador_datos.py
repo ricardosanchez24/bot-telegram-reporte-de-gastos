@@ -14,6 +14,9 @@ def procesador(data):
     #crear nueva columna con valores vacios
     tabla['categoria'] = ''
 
+    #limpieza de datos en la columna monto para que pandas pueda leerlo y sumarlo en tipo numerico
+    tabla['monto'] = tabla['monto'].str.replace(".","",regex=False).str.replace(",",".").astype(float)
+
     #print(tabla.loc[0])
     #print(tabla)
     #convirtiendo toda la columna de descripcion en una lista
@@ -21,6 +24,7 @@ def procesador(data):
 
     # se pasa la lista al clasificador y se limpian los datos de respuesta
     lista_clasificacion = clasificacion_datos(lista_descripcion=lista_descripcion)
+
     lista_limpia = lista_clasificacion.replace("```json","")
     lista = json.loads(lista_limpia) #loasd convierte un strin json en una lista o diccionario
 
