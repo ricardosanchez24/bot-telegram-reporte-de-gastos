@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import time
 
 load_dotenv()
 usuario = os.environ.get('USER_BANCO')
@@ -33,32 +34,32 @@ def scraper():
     campo_contraseña = driver.find_element(By.ID, "mat-input-1")
     campo_contraseña.send_keys(contraseña)
 
-    #driver.implicitly_wait(5)
+    # Definimos un wait estándar para reutilizar
+    wait = WebDriverWait(driver, 2.5)
 
-    boton_contraseña = WebDriverWait(driver, 5).until(
-    EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Continuar')]"))
-)
-    
+    boton_contraseña = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Continuar')]")))
     boton_contraseña.click()
 
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(1)
 
     barra_opciones = driver.find_elements(By.CLASS_NAME, "mat-button")
     boton_solicitudes = barra_opciones[4]
     boton_solicitudes.click()
 
-    #driver.implicitly_wait(5)
-
+    time.sleep(1.5)
+    
     opciones_solicitudes = driver.find_elements(By.CLASS_NAME,"mat-menu-item")
-    estados_financieros_page = opciones_solicitudes[6]
+    estados_financieros_page = opciones_solicitudes[5]
     estados_financieros_page.click()
-
+    
+    
+    '''
+    estados_financieros_page = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Estados financieros')]")))
+    estados_financieros_page.click()
     #driver.implicitly_wait(5)
-
+    '''
     # --- SECCIÓN CORREGIDA PARA SELECCIÓN DE ESTADOS FINANCIEROS ---
-
-    # Definimos un wait estándar para reutilizar
-    wait = WebDriverWait(driver, 10)
 
     # 1. Seleccionar tipo de instrumento (Cuenta)
     dropdown = wait.until(EC.element_to_be_clickable((By.ID, "mat-select-0")))
@@ -66,7 +67,7 @@ def scraper():
     
     opcion_cuenta = wait.until(EC.element_to_be_clickable((By.ID, "mat-option-0")))
     opcion_cuenta.click()
-
+    '''
     # --- BLOQUE PARA SALTAR TÉRMINOS Y CONDICIONES ---
     try:
         # Esperamos unos segundos a ver si aparece el checkbox de "Aceptar términos"
@@ -85,7 +86,8 @@ def scraper():
         # Si no aparece en 3 segundos, asumimos que no salió y seguimos
         print("No se detectó validación de términos, continuando...")
     # ------------------------------------------------
-
+    '''
+    
     # 2. Seleccionar tipo de moneda (Nacional)
     # Esperamos a que el segundo select sea clickeable (esto indica que el primero ya procesó)
     dropdown2 = wait.until(EC.element_to_be_clickable((By.ID, "mat-select-1")))
@@ -113,14 +115,12 @@ def scraper():
     boton_procesar = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Procesar')]")))
     boton_procesar.click()
 
+    driver.implicitly_wait(5)
+
     # --- FIN DE LA SECCIÓN CORREGIDA ---
-
-    driver.implicitly_wait(15)
-
-    boton_salir = barra_opciones[7]
+    #wait_salir = WebDriverWait(driver,5)
+    boton_salir = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'salir')]")))
     boton_salir.click()
-
-    
 
     #"ng-star-inserted" [ class=mat-select-0, [div clas=mat-form-field-infix, [ id=mat-radio-5-input
 
