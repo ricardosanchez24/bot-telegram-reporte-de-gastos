@@ -14,7 +14,7 @@ import numpy as np
 # =========================================================
 # Importamos cada función específica en lugar del módulo completo 
 # para mantener el espacio de nombres limpio y saber exactamente qué usamos.
-
+from Scraper_gastos import scraper
 from datos_banco_BDV import procesar_estado_cuenta
 from procesador_datos import procesador
 from graficador_datos import graficador
@@ -51,6 +51,8 @@ async def report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 2. Bloque Try/Except: Al centralizar, si el PDF falla, o Gemini no responde, 
     # el programa no "explota" crasheando el bot entero. Capturamos el error aquí.
     try:
+        #---Fase 0: Inicializacion de datos (Estados financieros)---
+        scraper()
         # --- FASE 1: EXTRACCIÓN ---
         # Llamamos al módulo de PDF. Esperamos que devuelva la ruta del archivo.
         ruta_archivo_csv = procesar_estado_cuenta()
