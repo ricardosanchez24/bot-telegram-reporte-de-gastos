@@ -14,13 +14,13 @@ import numpy as np
 # =========================================================
 # Importamos cada función específica en lugar del módulo completo 
 # para mantener el espacio de nombres limpio y saber exactamente qué usamos.
-from Scraper_gastos import scraper
 from datos_banco_BDV import procesar_estado_cuenta
 from procesador_datos import procesador
 from graficador_datos import graficador
 
 load_dotenv()
 token = os.environ.get('TOKEN_BOT')
+telegram_id = os.environ.get('TELEGRAM_ID')
 
 #datos_graficados = graficador
 
@@ -41,6 +41,9 @@ async def report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Guardamos el ID del chat en una variable para no repetirlo múltiples veces. (Principio DRY: Don't Repeat Yourself)
     chat_id = update.effective_chat.id
     
+    if str(chat_id) != str(telegram_id):
+        await context.bot.send_message(chat_id=chat_id, text='Lo siento pero no tiene autorizacion para usar este bot')
+        return
     # 1. Feedback inmediato: Los procesos con LLMs (Gemini) o archivos tardan. 
     # Siempre debemos avisar al usuario para que no crea que el bot "se colgó".
     await context.bot.send_message(
@@ -51,8 +54,6 @@ async def report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 2. Bloque Try/Except: Al centralizar, si el PDF falla, o Gemini no responde, 
     # el programa no "explota" crasheando el bot entero. Capturamos el error aquí.
     try:
-        #---Fase 0: Inicializacion de datos (Estados financieros)---
-        scraper()
         # --- FASE 1: EXTRACCIÓN ---
         # Llamamos al módulo de PDF. Esperamos que devuelva la ruta del archivo.
         ruta_archivo_csv = procesar_estado_cuenta()

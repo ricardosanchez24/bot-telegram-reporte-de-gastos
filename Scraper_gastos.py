@@ -124,5 +124,3 @@ def scraper():
 
     #"ng-star-inserted" [ class=mat-select-0, [div clas=mat-form-field-infix, [ id=mat-radio-5-input
 
-
-scraper()
